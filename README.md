@@ -31,3 +31,13 @@ VITE_API_URL=http://127.0.0.1:5000
 DB_CONNECT='mysql+mysqlconnector://username:password@localhost:port/database'
 JWT_SECRET_KEY='your_secret_key'
 ```
+
+# Containerization & Orchestration
+
+- Run the application on kubernetes via.. run.sh
+
+```
+chmod +x run.sh
+./run.sh
+
+```

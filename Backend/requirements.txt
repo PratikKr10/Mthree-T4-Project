@@ -16,6 +16,7 @@ Flask-SQLAlchemy
 gevent
 gevent-websocket
 greenlet
+gunicorn
 idna
 importlib-metadata
 importlib-resources
