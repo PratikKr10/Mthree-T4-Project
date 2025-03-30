@@ -1,37 +1,39 @@
-
-
-echo "Running the application"
-
+#!/bin/bash
 set -e
 
-echo "Running the Minikube"
-minikube start
+# 🐳 Use Minikube's Docker daemon
+echo "🐳 Switching to Minikube Docker daemon..."
+eval $(minikube docker-env)
 
-echo "Creating namespace"
-kubectl create namespace uber
+# 🚀 Ensure namespace exists
+NAMESPACE="uber"
+echo "🚀 Ensuring namespace '$NAMESPACE' exists..."
+kubectl get ns $NAMESPACE >/dev/null 2>&1 || kubectl create ns $NAMESPACE
 
-echo "Building the Docker image - backend"
-cd Backend
-docker build -t backend-api:latest .
+# 🔨 Build backend image
+echo "🔨 Building backend image..."
+docker build -t backend-api:latest ./Backend
 
-echo "Building the Docker image - frontend"
-cd ../Frontend
-docker build -t frontend:latest .
+# 🔨 Build frontend image
+echo "🔨 Building frontend image..."
+docker build -t frontend:latest ./Frontend
 
-echo "Loading the images - frontend"
-minikube image load frontend:latest
+# 📦 Apply Kubernetes manifests
+echo "📦 Applying Kubernetes manifests in namespace '$NAMESPACE'..."
+kubectl apply -n $NAMESPACE -f k8s/
 
-echo "Loading the images - frontend"
-minikube image load backend-api:latest
+# ⏳ Wait for frontend pod to be ready
+echo "⏳ Waiting for frontend pod to be ready..."
+kubectl wait --for=condition=ready pod -l app=frontend -n $NAMESPACE --timeout=60s || {
+  echo "❌ Frontend pod not ready. Exiting."
+  exit 1
+}
 
-cd ..
-echo "Creating the deployment - backend"
-kubectl apply -f be-secrets.yaml
-kubectl apply -f be-deployment.yaml
-
-echo "Creating the deployment - frontend"
-kubectl apply -f fe-deployment.yaml
-
-echo "Porforwarding the services fronend 5173:80 and backend 5000:5000"
-kubectl port-forward svc/frontend-service 5173:80 -n uber
-kubectl port-forward svc/backend-service 5000:5000 -n uber
+# 🌐 Ask user to port forward
+read -p "🌐 Do you want to start a port forward to the frontend service? (y/n): " ANSWER
+if [[ "$ANSWER" == "y" ]]; then
+  echo "🌍 Starting port-forward to frontend service on http://localhost:8080 ..."
+  kubectl port-forward -n $NAMESPACE svc/frontend 8080:80
+else
+  echo "✅ Setup complete. Port-forward skipped."
+fi

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-backend
+  namespace: uber
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-backend
+  template:
+    metadata:
+      labels:
+        app: flask-backend
+    spec:
+      containers:
+        - name: flask-backend
+          image: backend-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: log-volume
+              mountPath: /app/logs
+          env:
+            - name: PROMETHEUS_MULTIPROC_DIR
+              value: /tmp
+            - name: DB_CONNECT
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_CONNECT
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET_KEY
+      volumes:
+        - name: log-volume
+          emptyDir: {}
