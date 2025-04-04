@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
+export KUBECONFIG=/var/lib/jenkins/.kube/config
+
 echo "✅ Minikube is assumed to be running. Proceeding with build and deploy..."
+
 
 
 
