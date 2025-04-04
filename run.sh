@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-# 🚀 Ensure Minikube is running
 echo "🚀 Checking Minikube status..."
-if ! minikube status | grep -q "host: Running"; then
+if ! minikube status | grep -q "Running"; then
   echo "🔄 Minikube is not running. Starting Minikube..."
-  minikube start
+  minikube start --driver=docker
 else
   echo "✅ Minikube is already running."
 fi
+
 
 # 🐳 Use Minikube's Docker daemon
 echo "🐳 Switching to Minikube Docker daemon..."
