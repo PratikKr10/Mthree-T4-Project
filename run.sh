@@ -59,3 +59,5 @@ kubectl port-forward -n $NAMESPACE svc/loki 3100:3100 &
 echo "📁 Loki (logs) → http://localhost:3100"
 
 echo "✅ All port-forwards started in the background."
+echo "🎉 Build and deployment completed successfully."
+exit 0
