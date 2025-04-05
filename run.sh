@@ -36,28 +36,24 @@ kubectl wait --for=condition=ready pod -l app=frontend -n $NAMESPACE --timeout=6
 echo "🛑 Killing existing kubectl port-forwards (if any)..."
 pkill -f "kubectl port-forward" || true
 
+# 💻 Use WSL host IP for browser access
+HOST_IP="172.24.12.4"
+
 echo "🔁 Starting port-forwarding for all main services..."
 
-# IP to access from browser on Windows
-
-HOST_IP=localhost
-
-
-# ✅ Corrected port-forwarding syntax
-kubectl port-forward -n $NAMESPACE svc/frontend 3001:80 &
+kubectl port-forward -n $NAMESPACE svc/frontend --address=$HOST_IP 3001:80 &
 echo "🌍 Frontend → http://$HOST_IP:3001"
 
-kubectl port-forward -n $NAMESPACE svc/flask-backend 5000:5000 &
+kubectl port-forward -n $NAMESPACE svc/flask-backend --address=$HOST_IP 5000:5000 &
 echo "🧠 Backend (Flask API) → http://$HOST_IP:5000"
 
-kubectl port-forward -n $NAMESPACE svc/grafana 3030:3000 &
+kubectl port-forward -n $NAMESPACE svc/grafana --address=$HOST_IP 3030:3000 &
 echo "📊 Grafana → http://$HOST_IP:3030"
 
-kubectl port-forward -n $NAMESPACE svc/prometheus 9090:9090 &
+kubectl port-forward -n $NAMESPACE svc/prometheus --address=$HOST_IP 9090:9090 &
 echo "📈 Prometheus → http://$HOST_IP:9090"
 
-kubectl port-forward -n $NAMESPACE svc/loki 3100:3100 &
+kubectl port-forward -n $NAMESPACE svc/loki --address=$HOST_IP 3100:3100 &
 echo "📁 Loki (logs) → http://$HOST_IP:3100"
 
 echo "✅ All port-forwards started successfully."
-exit 0
