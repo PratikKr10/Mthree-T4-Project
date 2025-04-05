@@ -43,21 +43,20 @@ pkill -f "kubectl port-forward" || true
 
 echo "🔁 Starting port-forwarding for all main services..."
 
-kubectl port-forward -n $NAMESPACE svc/frontend 3001:80 &
-echo "🌍 Frontend → http://localhost:3001"
+HOST_IP=172.24.0.1
 
-kubectl port-forward -n $NAMESPACE svc/flask-backend 5000:5000 &
-echo "🧠 Backend (Flask API) → http://localhost:5000"
+kubectl port-forward -n $NAMESPACE svc/frontend $HOST_IP:3001:80 &
+echo "🌍 Frontend → http://$HOST_IP:3001"
 
-kubectl port-forward -n $NAMESPACE svc/grafana 3030:3000 &
-echo "📊 Grafana → http://localhost:3030"
+kubectl port-forward -n $NAMESPACE svc/flask-backend $HOST_IP:5000:5000 &
+echo "🧠 Backend (Flask API) → http://$HOST_IP:5000"
 
-kubectl port-forward -n $NAMESPACE svc/prometheus 9090:9090 &
-echo "📈 Prometheus → http://localhost:9090"
+kubectl port-forward -n $NAMESPACE svc/grafana $HOST_IP:3030:3000 &
+echo "📊 Grafana → http://$HOST_IP:3030"
 
-kubectl port-forward -n $NAMESPACE svc/loki 3100:3100 &
-echo "📁 Loki (logs) → http://localhost:3100"
+kubectl port-forward -n $NAMESPACE svc/prometheus $HOST_IP:9090:9090 &
+echo "📈 Prometheus → http://$HOST_IP:9090"
 
-echo "✅ All port-forwards started in the background."
-echo "🎉 Build and deployment completed successfully."
+kubectl port-forward -n $NAMESPACE svc/loki $HOST_IP:3100:3100 &
+echo "📁 Loki (logs) → http://$HOST_IP:3100"
 exit 0
