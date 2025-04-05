@@ -37,7 +37,7 @@ kubectl wait --for=condition=ready pod -l app=frontend -n $NAMESPACE --timeout=6
 }
 
 echo "🛑 Killing existing kubectl port-forwards (if any)..."
-pkill -f "kubectl port-forward"
+pkill -f "kubectl port-forward" || true
 
 # NAMESPACE="uber"
 
