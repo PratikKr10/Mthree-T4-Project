@@ -39,7 +39,9 @@ pkill -f "kubectl port-forward" || true
 echo "🔁 Starting port-forwarding for all main services..."
 
 # IP to access from browser on Windows
-HOST_IP=172.24.0.1
+
+HOST_IP=localhost
+
 
 # ✅ Corrected port-forwarding syntax
 kubectl port-forward -n $NAMESPACE svc/frontend 3001:80 &
