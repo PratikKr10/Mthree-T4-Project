@@ -1,10 +1,14 @@
 #!/bin/bash
 set -e
 
-# Use Jenkins-specific kube and minikube config
+
+# ✅ Force Jenkins to use its own home and kube config
 export HOME=/var/lib/jenkins
+export USER=jenkins
 export KUBECONFIG=/var/lib/jenkins/.kube/config
 
+# ✅ Force minikube to use the Jenkins-specific profile directory
+export MINIKUBE_HOME=/var/lib/jenkins
 
 echo "✅ Minikube is assumed to be running. Proceeding with build and deploy..."
 
