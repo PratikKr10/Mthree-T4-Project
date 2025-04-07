@@ -9,7 +9,8 @@ pkill -f "kubectl port-forward" || true
 
 echo "🔁 Starting kubectl port-forwards..."
 
-# ❌ Removed frontend port-forward (served via NodePort now)
+kubectl port-forward -n $NAMESPACE svc/frontend-service 3001:80 &
+echo "🧠 Frontend → http://localhost:3001"
 
 kubectl port-forward -n $NAMESPACE svc/flask-backend 5000:5000 &
 echo "🧠 Backend → http://localhost:5000"
