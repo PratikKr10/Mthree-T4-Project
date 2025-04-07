@@ -75,32 +75,42 @@ Benefits:
 
 ## 🌍 Stripe Integration with `ngrok`
 
-🌍 What Problem Did We Face?
-Your app (frontend + backend) runs inside Minikube, which is like a private mini cloud on your system.
-But Stripe is a cloud-based service that needs to:
+### 🌍 What Problem Did We Face?
 
-Redirect users to your frontend after a payment
+Our app (frontend + backend) runs inside **Minikube**, which is like a private mini cloud on our system.  
+But Stripe is a **cloud-based service** that needs to:
 
-Send webhook events (like payment_success) to your backend
+- Redirect users to your **frontend** after a payment  
+- Send **webhook events** (like `payment_success`) to your **backend**
 
-🛑 The problem:
-Your local services (like http://localhost:5000 or 192.168.x.x) are not accessible from the internet.
+🛑 **The problem**:  
+Local services like `http://localhost:5000` or `192.168.x.x` are **not accessible** from the internet.
 
-💡 What Does ngrok Do?
-ngrok is like a bridge between the internet and your local machine.
+---
 
-It creates a temporary public URL (like https://abc123.ngrok.io) that securely forwards requests to a local port like:
+### 💡 What Does `ngrok` Do?
 
-http://localhost:3001 → your React frontend
+`ngrok` is like a **bridge between the internet and your local machine**.
 
-http://localhost:5000 → your Flask backend
+It creates a **temporary public URL** (like `https://abc123.ngrok.io`) that securely forwards requests to a local port like:
 
-✅ How ngrok Helped You Specifically
-Use Case	Problem Without ngrok	How ngrok Helped
-🔁 Stripe redirects	Stripe can’t reach localhost:3001	ngrok made a public frontend URL
-📩 Stripe webhooks	Stripe fails to POST to localhost:5000/webhook	ngrok gave a public backend endpoint
-🌐 Testing from remote devices	You couldn’t test from mobile or external	ngrok made it reachable anywhere
-🔒 HTTPS support	Stripe needs HTTPS	ngrok tunnels are secure (HTTPS by default)
+- `http://localhost:3001` → your **React frontend**
+- `http://localhost:5000` → your **Flask backend**
+
+---
+
+### ✅ How `ngrok` Helped Specifically
+
+| Use Case                    | Problem Without ngrok                           | How ngrok Helped                            |
+|----------------------------|--------------------------------------------------|---------------------------------------------|
+| 🔁 Stripe redirects         | Stripe can’t reach `localhost:3001`             | ngrok made a **public frontend URL**        |
+| 📩 Stripe webhooks          | Stripe fails to POST to `localhost:5000/webhook`| ngrok gave a **public backend endpoint**    |
+| 🌐 Remote testing           | Couldn’t test from mobile or external devices   | ngrok made it **reachable anywhere**        |
+| 🔒 HTTPS support            | Stripe requires HTTPS                           | ngrok tunnels are **secure (HTTPS by default)** |
+
+---
+
+
 ### ✅ Config Used (ngrok v3):
 ```yaml
 version: "3"
