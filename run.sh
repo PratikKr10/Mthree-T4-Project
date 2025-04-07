@@ -39,17 +39,17 @@ kubectl apply -f k8s/promtail-serviceaccount-rbac.yaml --namespace=uber
 kubectl apply -f k8s/secrets --namespace=uber
 kubectl apply -f k8s/services --namespace=uber
 
-export MINIKUBE_IP=$(minikube ip)
-export FRONTEND_PORT=$(kubectl get svc -n uber frontend-service -o=jsonpath='{.spec.ports[0].nodePort}')
-export FRONTEND_URL="http://$MINIKUBE_IP:$FRONTEND_PORT"
+# export MINIKUBE_IP=$(minikube ip)
+# export FRONTEND_PORT=$(kubectl get svc -n uber frontend-service -o=jsonpath='{.spec.ports[0].nodePort}')
+# export FRONTEND_URL="http://$MINIKUBE_IP:$FRONTEND_PORT"
 
-echo "FRONTEND_URL = $FRONTEND_URL"
+# echo "FRONTEND_URL = $FRONTEND_URL"
 
-kubectl create configmap frontend-config \
-  --from-literal=FRONTEND_URL="$FRONTEND_URL" \
-  --from-literal=VITE_BASE_URL="http://localhost:5000" \
-  --from-literal=VITE_API_URL="http://localhost:5000" \
-  -n uber --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create configmap frontend-config \
+#   --from-literal=FRONTEND_URL="$FRONTEND_URL" \
+#   --from-literal=VITE_BASE_URL="http://localhost:5000" \
+#   --from-literal=VITE_API_URL="http://localhost:5000" \
+#   -n uber --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl apply -f k8s/configs --namespace=uber   # Other configs
 kubectl apply -f k8s/deployments --namespace=uber

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: uber
+data:
+  FRONTEND_URL: "https://d19b-152-56-133-161.ngrok-free.app"
+  VITE_BASE_URL: "https://d6d-152-56-133-161.ngrok-free.app"
+  VITE_API_URL: "https://d6d-152-56-133-161.ngrok-free.app"
