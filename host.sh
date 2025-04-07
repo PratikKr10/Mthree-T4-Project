@@ -2,45 +2,23 @@
 
 set -e
 
-# Step 6: Wait for deployments to become ready
-deployments=(flask-backend frontend prometheus grafana loki)
-for deployment in "${deployments[@]}"; do
-    echo "⏳ Waiting for $deployment to become ready..."
-    kubectl rollout status deployment/$deployment -n uber
-done
+NAMESPACE="uber"
 
 echo "🛑 Killing existing port-forwards..."
 pkill -f "kubectl port-forward" || true
 
-# Step 7: Port forwarding services in the background
-declare -A ports=(
-    # [frontend-service]=5173:80
-    [flask-backend]=5000:5000
-    [prometheus]=9090:9090
-    [grafana]=3000:3000
-    [loki]=3100:3100
-)
+echo "🔁 Starting kubectl port-forwards..."
 
-echo "🔗 Setting up port forwarding..."
-for service in "${!ports[@]}"; do
-    kubectl port-forward svc/$service ${ports[$service]} -n uber &
-done
+# ❌ Removed frontend port-forward (served via NodePort now)
 
-# Step 8: Print service access URLs
-echo ""
-echo "🌐 To access your services, use the following commands:"
-for service in "prometheus grafana flask-backend frontend-service"; do
-    echo "🟢 $service:"
-    echo "minikube service $service -n uber --url"
-    echo ""
-done
+kubectl port-forward -n $NAMESPACE svc/flask-backend 5000:5000 &
+echo "🧠 Backend → http://localhost:5000"
 
-# echo "📢 If using Vite for frontend development, run:"
-# echo "cd Frontend && npm run dev"
+kubectl port-forward -n $NAMESPACE svc/grafana 3030:3000 &
+echo "📊 Grafana → http://localhost:3030"
 
-echo "🔹 Services Running:"
-echo "📁 Logs (Loki)        → http://localhost:3100"
-echo "📈 Monitoring (Prometheus) → http://localhost:9090"
-echo "📊 Dashboard (Grafana) → http://localhost:3000"
-echo "🧠 Backend (Flask API) → http://localhost:5000"
-echo "🌍 Frontend        →  $FRONTEND_URL"
+kubectl port-forward -n $NAMESPACE svc/prometheus 9090:9090 &
+echo "📈 Prometheus → http://localhost:9090"
+
+kubectl port-forward -n $NAMESPACE svc/loki 3100:3100 &
+echo "📁 Loki → http://localhost:3100"
