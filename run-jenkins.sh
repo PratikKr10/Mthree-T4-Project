@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
+# Use Jenkins-specific kube and minikube config
+export HOME=/var/lib/jenkins
 export KUBECONFIG=/var/lib/jenkins/.kube/config
+
 
 echo "✅ Minikube is assumed to be running. Proceeding with build and deploy..."
 
