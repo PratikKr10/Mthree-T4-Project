@@ -31,6 +31,14 @@ docker build -t frontend:latest ./Frontend
 
 # 📦 Apply Kubernetes manifests
 echo "📦 Applying Kubernetes manifests in namespace '$NAMESPACE'..."
-kubectl apply -n $NAMESPACE -f k8s/
+
+
+kubectl apply -n $NAMESPACE -f k8s/promtail-daemonset.yaml
+kubectl apply -n $NAMESPACE -f k8s/promtail-serviceaccount-rbac.yaml
+kubectl apply -n $NAMESPACE -f k8s/secrets
+kubectl apply -n $NAMESPACE -f k8s/services
+kubectl apply -n $NAMESPACE -f k8s/configs
+kubectl apply -n $NAMESPACE -f k8s/deployments
+
 
 echo "✅ Build and deployment completed."
